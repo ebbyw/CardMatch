@@ -81,8 +81,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
-    - Vector1_5ea43550473c4fd491955c320c87f357: 0
-    - Vector1_eb9b73dfb58348bc80754cc7086c1160: 27
+    - Vector1_5ea43550473c4fd491955c320c87f357: 27
+    - Vector1_eb9b73dfb58348bc80754cc7086c1160: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
