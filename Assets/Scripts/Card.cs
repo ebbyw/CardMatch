@@ -30,7 +30,9 @@ public class Card : MonoBehaviour
     [SerializeField]
     private Image cardImage;
 
-    public bool faceUp;
+    public bool FaceUp;
+    public char CardType {get; private set;}
+    public CardListener CardListener;
 
     bool rotating; //used to prevent button mashing
     Vector3 faceUpRotation = new Vector3(0f, 180f, 0f);
@@ -43,21 +45,26 @@ public class Card : MonoBehaviour
     }
 
     public void SetFace(char cardType){
-        cardImage.material.SetFloat("_BackFrameNo", cardTypeToFrameNo[cardType]);
+        CardType = cardType;
+        cardImage.material.SetFloat("_BackFrameNo", cardTypeToFrameNo[CardType]);
     }
 
     public void Flip(){
-        if(rotating){
+        if (CardListener == null ||
+            rotating ||
+            CardListener.FlippingCardsPaused) {
             return;
         }
-        faceUp = !faceUp;
-        StartCoroutine(RotateCard(faceUp ? faceUpRotation : faceDownRotation));
+
+        FaceUp = !FaceUp;
+        StartCoroutine(RotateCard(FaceUp ? faceUpRotation : faceDownRotation));
     }
 
     private IEnumerator RotateCard(Vector3 finalRotation){
         rotating = true;
+        CardListener.CardFlipAudioSource.Play();
         var t = 0f;
-        while(true){
+        while (true) {
             var nextRotationStep = Vector3.Lerp(transform.eulerAngles, finalRotation, t);
             transform.eulerAngles = nextRotationStep;
             t += Time.deltaTime;
@@ -67,6 +74,9 @@ public class Card : MonoBehaviour
             }
         }
         rotating = false;
+        if (FaceUp) {
+            CardListener.RegisterCardFlip(this);
+        }
     }
     
     public void Matched(){
@@ -74,7 +84,7 @@ public class Card : MonoBehaviour
     }
 
     public void Reset(){
-        faceUp = false;
+        FaceUp = false;
         StartCoroutine(RotateCard(faceDownRotation));
         cardButton.interactable = true;
     }
