@@ -33,10 +33,10 @@ public class Card : MonoBehaviour
     public bool FaceUp;
     public char CardType {get; private set;}
     public CardListener CardListener;
-
-    bool rotating; //used to prevent button mashing
-    Vector3 faceUpRotation = new Vector3(0f, 180f, 0f);
-    Vector3 faceDownRotation = new Vector3(0f, 0f, 0f);
+    public bool Rotating {get; private set;} //used to prevent button mashing
+    
+    private Vector3 faceUpRotation = new Vector3(0f, 180f, 0f);
+    private Vector3 faceDownRotation = new Vector3(0f, 0f, 0f);
 
     void Awake(){
         var materialForThisCard = Instantiate(cardImage.material);
@@ -51,7 +51,7 @@ public class Card : MonoBehaviour
 
     public void Flip(){
         if (CardListener == null ||
-            rotating ||
+            Rotating ||
             CardListener.FlippingCardsPaused) {
             return;
         }
@@ -61,7 +61,10 @@ public class Card : MonoBehaviour
     }
 
     private IEnumerator RotateCard(Vector3 finalRotation){
-        rotating = true;
+        Rotating = true;
+        if (FaceUp) {
+            CardListener.RegisterCardFlip(this);
+        }
         CardListener.CardFlipAudioSource.Play();
         var t = 0f;
         while (true) {
@@ -73,10 +76,7 @@ public class Card : MonoBehaviour
                 break;
             }
         }
-        rotating = false;
-        if (FaceUp) {
-            CardListener.RegisterCardFlip(this);
-        }
+        Rotating = false;
     }
     
     public void Matched(){

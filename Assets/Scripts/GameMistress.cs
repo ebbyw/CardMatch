@@ -18,8 +18,10 @@ public class GameMistress : MonoBehaviour
     [SerializeField]
     private AudioSource victorySound;
 
+    [SerializeField]
+    private CardListener cardListener;
+
     private bool _firstTimeSetupComplete;
-    private CardListener _cardListener = new CardListener();
     private int _matchPairsGoal;
     private bool _gameWon;
     private int _winCount;
@@ -31,14 +33,13 @@ public class GameMistress : MonoBehaviour
         if(boardSize % 2 != 0){
             Debug.LogError("board size is uneven, this will block board creation");
         }
-        _cardListener.CardFlipAudioSource = cardFlipSound;
         NewGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_cardListener.MatchedPairsCount == _matchPairsGoal && !_gameWon) {
+        if (cardListener.MatchedPairsCount == _matchPairsGoal && !_gameWon) {
             _gameWon = true;
             _winCount++;
             //Play Win Music
@@ -50,7 +51,7 @@ public class GameMistress : MonoBehaviour
 
     public void NewGame() {
         _matchPairsGoal = boardSize/2;
-        _cardListener.Reset();
+        cardListener.Reset();
         _gameWon = false;
         SetupBoard();
     }
@@ -61,7 +62,7 @@ public class GameMistress : MonoBehaviour
             //we can't make the board for some reason, fallback/alert the player
             return;
         }
-        board.SetCards(cardDeck, _cardListener, !_firstTimeSetupComplete);
+        board.SetCards(cardDeck, cardListener, !_firstTimeSetupComplete);
         _firstTimeSetupComplete = true;
     }
 }

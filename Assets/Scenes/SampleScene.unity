@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &21625023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 21625024}
+  - component: {fileID: 21625025}
+  m_Layer: 0
+  m_Name: CardListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &21625024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21625023}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 328162338}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &21625025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21625023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850f515a0e3fb4395b911f53df1d94e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FlippingCardsPaused: 0
+  MatchedPairsCount: 0
+  CardFlipAudioSource: {fileID: 2022985875}
 --- !u!1 &324574446
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,6 +280,7 @@ MonoBehaviour:
   WinCount: {fileID: 2005938169}
   cardFlipSound: {fileID: 2022985875}
   victorySound: {fileID: 1078478449}
+  cardListener: {fileID: 21625025}
 --- !u!4 &328162338
 Transform:
   m_ObjectHideFlags: 0
@@ -247,6 +294,7 @@ Transform:
   m_Children:
   - {fileID: 2022985874}
   - {fileID: 1078478448}
+  - {fileID: 21625024}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
