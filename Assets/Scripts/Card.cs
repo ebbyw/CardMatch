@@ -35,8 +35,8 @@ public class Card : MonoBehaviour
     public CardListener CardListener;
     public bool Rotating {get; private set;} //used to prevent button mashing
     
-    private Vector3 faceUpRotation = new Vector3(0f, 180f, 0f);
-    private Vector3 faceDownRotation = new Vector3(0f, 0f, 0f);
+    private Vector3 faceUpRotation = new Vector3(0f, 180f, 180f);
+    private Vector3 faceDownRotation = new Vector3(0f, 0f, 180f);
 
     void Awake(){
         var materialForThisCard = Instantiate(cardImage.material);
