@@ -900,6 +900,18 @@ namespace UnityEditor.Tilemaps
             }
         }
 
+        protected override bool CustomTool(bool isHotControl, TilemapEditorTool tool, Vector3Int position)
+        {
+            var executed = false;
+            if (grid)
+            {
+                executed = tool.HandleTool(isHotControl, grid, brushTarget, position);
+                if (executed)
+                    OnPaletteChanged();
+            }
+            return executed;
+        }
+
         public override void Repaint()
         {
             m_Owner.Repaint();
@@ -909,6 +921,8 @@ namespace UnityEditor.Tilemaps
         {
             GridSelection.Clear();
         }
+
+        public override bool isActive => grid != null;
 
         protected override void OnBrushPickStarted()
         {
