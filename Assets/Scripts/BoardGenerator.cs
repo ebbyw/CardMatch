@@ -5,7 +5,7 @@ using System;
 
 public class BoardGenerator 
 {
-    static readonly char[] cardTypes = new char[] {'A','2','3','4','5','6','7','8','9','X','J','Q','K','*'}; //'*' is for Joker, 'X' for 10
+    private static readonly char[] cardTypes = new char[] {'A','2','3','4','5','6','7','8','9','X','J','Q','K','*'}; //'*' is for Joker, 'X' for 10
 
     //numSpaces MUST BE EVEN
     public static char[] CreateBoard(int numSpaces){

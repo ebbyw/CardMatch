@@ -1,6 +1,6 @@
 using System;
 
-static class RandomExtensions
+internal static class RandomExtensions
 {
     public static void Shuffle<T> (this Random rng, T[] array)
     {
