@@ -18,7 +18,7 @@ public class Card : MonoBehaviour {
     { 'J', 10 },
     { 'Q', 11 },
     { 'K', 12 },
-    { '*', 39 }, // Joker
+    { '*', 13 }, // Joker
     { 'B', 27 } // the back 
   };
 
@@ -27,23 +27,21 @@ public class Card : MonoBehaviour {
 
   public bool FaceUp;
   public char CardType { get; private set; }
-  [HideInInspector] public CardListener CardListener;
+  public CardListener CardListener;
   public bool Rotating { get; private set; } //used to prevent button mashing
 
-  private readonly Vector3 _faceUpRotation = new(0f, 180f, 0f);
-  private readonly Vector3 _faceDownRotation = new(0f, 0f, 0f);
-  private static readonly int backIndex = Shader.PropertyToID("_BackIndex");
-  private static readonly int frontIndex = Shader.PropertyToID("_FrontIndex");
+  private Vector3 faceUpRotation = new(0f, 180f, 180f);
+  private Vector3 faceDownRotation = new(0f, 0f, 180f);
 
   private void Awake() {
     var materialForThisCard = Instantiate(cardImage.material);
     cardImage.material = materialForThisCard;
-    cardImage.material.SetInteger(backIndex, cardTypeToFrameNo['B']);
+    cardImage.material.SetFloat("_FrontFrameNo", cardTypeToFrameNo['B']);
   }
 
   public void SetFace (char cardType) {
     CardType = cardType;
-    cardImage.material.SetInteger(frontIndex, cardTypeToFrameNo[CardType]);
+    cardImage.material.SetFloat("_BackFrameNo", cardTypeToFrameNo[CardType]);
   }
 
   public void Flip() {
@@ -54,7 +52,7 @@ public class Card : MonoBehaviour {
     }
 
     FaceUp = !FaceUp;
-    StartCoroutine(RotateCard(FaceUp ? _faceUpRotation : _faceDownRotation));
+    StartCoroutine(RotateCard(FaceUp ? faceUpRotation : faceDownRotation));
   }
 
   private IEnumerator RotateCard (Vector3 finalRotation) {
@@ -78,9 +76,13 @@ public class Card : MonoBehaviour {
     Rotating = false;
   }
 
+  public void Matched() {
+    cardButton.interactable = false;
+  }
+
   public void Reset() {
     FaceUp = false;
-    StartCoroutine(RotateCard(_faceDownRotation));
+    StartCoroutine(RotateCard(faceDownRotation));
     cardButton.interactable = true;
   }
 }
