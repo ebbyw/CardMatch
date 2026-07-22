@@ -23,7 +23,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --name) new_name="${2:-}"; shift 2 ;;
     --code) new_code="${2:-}"; shift 2 ;;
-    -h|--help) grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) awk 'NR==1{next} /^#/{s=$0;sub(/^# ?/,"",s);print s;next} {exit}' "$0"; exit 0 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
