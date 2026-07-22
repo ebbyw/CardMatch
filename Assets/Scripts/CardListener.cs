@@ -3,6 +3,15 @@ using UnityEngine;
 
 public class CardListener : MonoBehaviour {
   private static Card[] _flippedCards = new Card[2];
+
+  // _flippedCards is static, so with Domain Reload disabled (Enter Play Mode Settings)
+  // it survives between play sessions holding dead Card references. Clear it before the
+  // scene loads so every play session starts from a clean slate.
+  [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+  private static void ResetStaticState() {
+    _flippedCards = new Card[2];
+  }
+
   public bool FlippingCardsPaused;
   public int MatchedPairsCount;
   public AudioSource CardFlipAudioSource;
@@ -34,6 +43,8 @@ public class CardListener : MonoBehaviour {
         if (_flippedCards[0].CardType == _flippedCards[1].CardType) {
           //MATCH!
           MatchedPairsCount++;
+          _flippedCards[0].Matched();
+          _flippedCards[1].Matched();
         }
         else {
           //NO MATCH!

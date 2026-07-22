@@ -63,3 +63,6 @@ Thumbs.db.meta
 *.vscode
 .idea
 /.utmp
+
+# Unity CLI test output (Tools/run-tests.sh)
+TestResults/

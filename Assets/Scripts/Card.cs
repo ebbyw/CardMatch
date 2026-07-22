@@ -29,6 +29,7 @@ public class Card : MonoBehaviour {
   public char CardType { get; private set; }
   public CardListener CardListener;
   public bool Rotating { get; private set; } //used to prevent button mashing
+  public bool IsMatched { get; private set; } //matched cards are out of play until the next game
 
   private Vector3 faceUpRotation = new(0f, 180f, 180f);
   private Vector3 faceDownRotation = new(0f, 0f, 180f);
@@ -47,6 +48,7 @@ public class Card : MonoBehaviour {
   public void Flip() {
     if (CardListener == null ||
         Rotating ||
+        IsMatched ||
         CardListener.FlippingCardsPaused) {
       return;
     }
@@ -77,10 +79,12 @@ public class Card : MonoBehaviour {
   }
 
   public void Matched() {
+    IsMatched = true;
     cardButton.interactable = false;
   }
 
   public void Reset() {
+    IsMatched = false;
     FaceUp = false;
     StartCoroutine(RotateCard(faceDownRotation));
     cardButton.interactable = true;

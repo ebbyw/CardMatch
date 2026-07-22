@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TwoSidedCardMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 9fb1db2a1d7404cd9a1041ed74dc7e34, type: 3}
+  m_Shader: {fileID: 4800000, guid: 07bcb30706be4c399689d482cc7c4a89, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -36,11 +36,7 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_219c99c631ca4970a36ff34348eb23df:
-        m_Texture: {fileID: 2800000, guid: 2319611e9885c41e6a6a05a456905656, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - Texture2D_c09677d3dd3742ed8ca49f834127b2c6:
+    - _Spritesheet:
         m_Texture: {fileID: 2800000, guid: 2319611e9885c41e6a6a05a456905656, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
