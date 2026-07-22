@@ -66,3 +66,10 @@ Thumbs.db.meta
 
 # Unity CLI test output (Tools/run-tests.sh)
 TestResults/
+
+# Google Play service-account key (NEVER commit) + fastlane noise
+*.play.json
+play-service-account*.json
+fastlane/report.xml
+fastlane/README.md
+fastlane/*.json

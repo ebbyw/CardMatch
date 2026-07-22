@@ -1,0 +1,54 @@
+# fastlane lanes for CardMatch (Android / Google Play).
+#
+# Setup once:
+#   brew install fastlane
+#   export SUPPLY_JSON_KEY=~/.config/play/CardMatch.play.json   # your key path
+#
+# Uploading requires an .aab built by Unity (Build Settings > Build App Bundle).
+# Pass its path with aab:... or set AAB_PATH.
+
+default_platform(:android)
+
+platform :android do
+  # Verify the service account can reach this app. Run this FIRST after setup —
+  # it fails loudly if the key, API enablement, or Play permissions are wrong,
+  # before you risk touching a real track.
+  desc "Check the Play API credential works"
+  lane :verify do
+    validate_play_store_json_key(json_key: ENV["SUPPLY_JSON_KEY"])
+    UI.success("Service account can authenticate to Google Play.")
+  end
+
+  # Upload to the internal testing track (safe: testers only, not the public).
+  desc "Upload an AAB to the Internal testing track"
+  lane :internal do |options|
+    aab = options[:aab] || ENV["AAB_PATH"]
+    UI.user_error!("Pass the bundle: fastlane internal aab:/path/to/app.aab") if aab.nil? || aab.empty?
+
+    upload_to_play_store(
+      track: "internal",
+      aab: aab,
+      release_status: "completed",
+      skip_upload_metadata: true,   # code-only upload; leave listing/screenshots untouched
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  # Upload to production as a DRAFT (nothing goes live until you press publish
+  # in the Play Console). Deliberately not a one-command full rollout.
+  desc "Upload an AAB to Production as a draft (manual publish in Console)"
+  lane :production_draft do |options|
+    aab = options[:aab] || ENV["AAB_PATH"]
+    UI.user_error!("Pass the bundle: fastlane production_draft aab:/path/to/app.aab") if aab.nil? || aab.empty?
+
+    upload_to_play_store(
+      track: "production",
+      aab: aab,
+      release_status: "draft",      # <-- draft, not live
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
