@@ -52,10 +52,11 @@ if [[ "$bump" -eq 1 ]]; then
     "$PROJECT_ROOT/Tools/bump-version.sh"
   fi
 elif [[ -n "$name_arg" ]]; then
-  # --no-bump but a name was given: set the name without touching the code.
-  "$PROJECT_ROOT/Tools/bump-version.sh" --name "$name_arg" --code \
-    "$(awk '/^  AndroidBundleVersionCode:/ {print $2; exit}' "$PROJECT_ROOT/ProjectSettings/ProjectSettings.asset")" \
-    2>/dev/null || true
+  # --no-bump keeps the same version code, which means the same release. Changing
+  # only the name would desync code and name — exactly the 11(0.10) bug. Refuse.
+  echo "ERROR: --name can't be combined with --no-bump (same code = same release)." >&2
+  echo "Drop --no-bump to bump the code and set a matching name." >&2
+  exit 2
 fi
 
 code="$(awk '/^  AndroidBundleVersionCode:/ {print $2; exit}' "$PROJECT_ROOT/ProjectSettings/ProjectSettings.asset")"

@@ -35,6 +35,35 @@ platform :android do
     )
   end
 
+  # Promote an already-uploaded build from a source track to Production as a
+  # DRAFT, without re-uploading the .aab. Use this when the version code is
+  # already on another track (a versionCode can only be uploaded once). The
+  # source release is deactivated on promote, which also sunsets that track.
+  #   fastlane promote version:11            # from internal (default)
+  #   fastlane promote version:11 from:closed
+  desc "Promote an existing build (by version code) to Production as a draft"
+  lane :promote do |options|
+    version = options[:version]
+    UI.user_error!("Pass the version code: fastlane promote version:11") if version.nil?
+    source = options[:from] || "internal"
+
+    upload_to_play_store(
+      track: source,
+      track_promote_to: "production",
+      version_code: version.to_i,
+      # For a PROMOTE, the promoted release status is set by
+      # track_promote_release_status, NOT release_status. "draft" keeps it
+      # unpublished until you press publish in the Console.
+      track_promote_release_status: "draft",
+      skip_upload_aab: true,                # promote only, no re-upload
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+
   # Upload to production as a DRAFT (nothing goes live until you press publish
   # in the Play Console). Deliberately not a one-command full rollout.
   desc "Upload an AAB to Production as a draft (manual publish in Console)"

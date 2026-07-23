@@ -46,19 +46,23 @@ if [[ "$new_code" -le "$cur_code" ]]; then
   exit 1
 fi
 
+# Keep the version NAME in sync with the code. This project's convention is
+# "0.<code>" (v5=0.5, v6=0.6, ... v10=0.10). Play shows "code(name)", so a name
+# that lags the code produces confusing labels like 11(0.10). Pass --name to
+# override (e.g. a real 1.0 release).
+if [[ -z "$new_name" ]]; then
+  new_name="0.${new_code}"
+fi
+
 # Rewrite in place via a temp file (portable; no sed -i quirks).
 tmp="$(mktemp)"
 awk -v code="$new_code" -v name="$new_name" '
   /^  AndroidBundleVersionCode:/ { print "  AndroidBundleVersionCode: " code; next }
-  (name != "") && /^  bundleVersion:/ { print "  bundleVersion: " name; next }
+  /^  bundleVersion:/            { print "  bundleVersion: " name; next }
   { print }
 ' "$PS" > "$tmp"
 mv "$tmp" "$PS"
 
 echo "versionCode : $cur_code -> $new_code"
-if [[ -n "$new_name" ]]; then
-  echo "versionName : $cur_name -> $new_name"
-else
-  echo "versionName : $cur_name (unchanged; pass --name to bump)"
-fi
+echo "versionName : $cur_name -> $new_name"
 echo "Now build the AAB in Unity, then: fastlane internal aab:<path>"
