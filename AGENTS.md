@@ -15,7 +15,7 @@ how the project is built, tested, and shipped — for both humans and agents.
 | `Assets/Tests/` | EditMode + PlayMode tests |
 | `Tools/*.py` | Build / version / test tooling (Python — preferred over Bash here) |
 | `fastlane/` | Google Play upload lanes |
-| `.claude/skills/update-play-target-api/` | Skill: bump Android target API to the latest Play requirement |
+| `~/.claude/skills/update-play-target-api/` | User-level skill (shared across all games): bump Android target API to the latest Play requirement |
 
 ## Conventions
 
