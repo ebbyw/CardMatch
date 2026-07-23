@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
-# One-command Android build: bump version, build a signed .aab headlessly, and
-# (optionally) upload it to Google Play internal testing.
+# One-command Android build+publish: bump the version, build a signed .aab
+# headlessly, and (optionally) upload it to Google Play Production as a DRAFT.
+# The draft never goes live until you press publish in the Play Console.
 #
-#   ./Tools/build-android.sh                 # bump code +1, build .aab
-#   ./Tools/build-android.sh --no-bump       # build at the current version code
-#   ./Tools/build-android.sh --name 0.11     # also set the version name, then build
-#   ./Tools/build-android.sh --upload        # build, then fastlane internal upload
+#   ./Tools/build-android.sh                 # bump code +1 (name 0.<code>), build .aab
+#   ./Tools/build-android.sh --upload        # build, then upload a Production draft
+#   ./Tools/build-android.sh --name 1.0 --upload   # set a milestone name too
+#   ./Tools/build-android.sh --no-bump       # rebuild the current version code
 #
 # Requirements:
 #   - The Unity editor for this project must be CLOSED (Unity locks the project).
 #   - Keystore passwords in the environment:
 #       export CM_KEYSTORE_PASS='...'
 #       export CM_KEYALIAS_PASS='...'
-#   - For --upload: SUPPLY_JSON_KEY set and fastlane installed (see fastlane/).
+#   - For --upload: fastlane installed; SUPPLY_JSON_KEY set (defaults to
+#     ~/.config/play/CardMatch.play.json if you don't set it).
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -86,9 +88,19 @@ fi
 echo "==> Built $(du -h "$aab" | cut -f1)  $aab"
 
 # --- Optional upload -------------------------------------------------------
+# Upload straight to Production as a DRAFT — it does not go live until you press
+# publish in the Play Console. (Internal testing is retired.)
 if [[ "$upload" -eq 1 ]]; then
-  echo "==> Uploading to internal testing"
-  ( cd "$PROJECT_ROOT" && fastlane internal aab:"$aab" )
+  : "${SUPPLY_JSON_KEY:=$HOME/.config/play/CardMatch.play.json}"  # fallback if unset
+  export SUPPLY_JSON_KEY
+  if [[ ! -f "$SUPPLY_JSON_KEY" ]]; then
+    echo "ERROR: Play key not found at $SUPPLY_JSON_KEY (set SUPPLY_JSON_KEY)." >&2
+    echo "The .aab built fine at $aab — upload it manually once the key is set." >&2
+    exit 1
+  fi
+  echo "==> Uploading v${code} to Production (draft)"
+  ( cd "$PROJECT_ROOT" && fastlane production_draft aab:"$aab" )
+  echo "==> Uploaded as a DRAFT. Review and press publish in the Play Console to go live."
 else
-  echo "Next: fastlane internal aab:\"$aab\""
+  echo "Next: fastlane production_draft aab:\"$aab\"   (uploads a production draft)"
 fi
