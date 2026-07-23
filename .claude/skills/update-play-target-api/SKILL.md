@@ -120,30 +120,23 @@ Make the smallest possible diff — one field. Do not reformat the YAML.
   changelog findings, and any follow-up (SDK install, code fix for a flagged
   behavior change).
 
-## Phase 7 — (Optional) Build and upload via fastlane
+## Phase 7 — (Optional) Build and upload
 
-Only if the user wants the change shipped, not just committed. Requires a
-one-time setup: `brew install fastlane` and a Play service-account key exported
-as `SUPPLY_JSON_KEY` (see the app's `fastlane/` config).
+Only if the user wants the change shipped, not just committed. Requires the
+build tooling to be set up (see `AGENTS.md`): Unity closed, keystore passwords
+in `CM_KEYSTORE_PASS` / `CM_KEYALIAS_PASS`, fastlane installed, and the Play key
+at `~/.config/play/CardMatch.play.json` (or `SUPPLY_JSON_KEY`).
 
-1. Confirm the credential works before touching any track:
-   ```bash
-   fastlane verify
-   ```
-2. Build the AAB in Unity (File > Build Settings > Android, "Build App Bundle
-   (Google Play)"). Note the output `.aab` path.
-3. Upload to the **internal** track first — never straight to production:
-   ```bash
-   fastlane internal aab:/path/to/CardMatch.aab
-   ```
-4. Only after the internal build is verified good, promote to a production
-   **draft** (stays unpublished until the user presses publish in the Console):
-   ```bash
-   fastlane production_draft aab:/path/to/CardMatch.aab
-   ```
+One command bumps the version, builds a signed `.aab`, and uploads it to
+Production as a **draft**:
 
-Never roll out to production automatically. Uploading a production release that
-goes live is the user's call, made in the Play Console.
+```bash
+./Tools/build_android.py --upload
+```
+
+The draft never goes live on its own — the user presses publish in the Play
+Console. Never roll out to production automatically; going live is the user's
+call. To build without uploading, drop `--upload`.
 
 ## Guardrails
 
