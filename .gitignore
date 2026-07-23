@@ -73,3 +73,4 @@ play-service-account*.json
 fastlane/report.xml
 fastlane/README.md
 fastlane/*.json
+/build/outputs
